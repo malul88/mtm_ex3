@@ -11,9 +11,9 @@ namespace mtm {
     private:
         /* data */
     public:
-        intMatrix(Dimensions::Dimensions,const int init_num);
+        intMatrix(Dimensions dims,int init_num);
         ~intMatrix();
-        intMatrix identity(Dimensions::Dimensions);
+        intMatrix identity(Dimensions dims);
         int height(const intMatrix matrix);
         int width(const intMatrix matrix);
         int size(const intMatrix matrix);
@@ -25,14 +25,12 @@ namespace mtm {
 
     };
     
-    intMatrix::intMatrix(Dimensions::Dimensions, int init_num){
+    intMatrix::intMatrix(Dimensions dims, int init_num){
 
         }
-    
-    intMatrix::~intMatrix()
-    {
-    }
-    
+
+
+
 }
 
 
