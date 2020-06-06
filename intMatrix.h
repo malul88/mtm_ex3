@@ -9,29 +9,51 @@ namespace mtm {
     class intMatrix
     {
     private:
-        /* data */
+       int** matrix;
+       Dimensions dimensions;
     public:
         intMatrix(Dimensions dims,int init_num);
         ~intMatrix();
-        intMatrix identity(Dimensions dims);
+        intMatrix& identity(Dimensions dims);
         int height(const intMatrix matrix);
         int width(const intMatrix matrix);
         int size(const intMatrix matrix);
         intMatrix transpose(const intMatrix matrix);
         intMatrix operator+(const intMatrix matrix) const;
         intMatrix operator-() const;
+        intMatrix operator-(const intMatrix matrix) const;
+        intMatrix operator+(const int x) const;
+        intMatrix operator+=(const int x) const;
+        std::ostream& operator<<(std::ostream& os) const;
+        intMatrix operator()(const int col, const int row) const;
+        intMatrix& operator()(const int col, const int row);
+        bool operator<(intMatrix matrix);
+        bool operator>(intMatrix matrix);
+        bool operator>=(intMatrix matrix);
+        bool operator<=(intMatrix matrix);
+        bool operator==(intMatrix matrix);
+        bool operator!=(intMatrix matrix);
+        class iterator
+        {
+        private:
+            int i;
+        public:
+            iterator();
+            ~iterator();
+            iterator begin(const intMatrix matrix) const;
+            iterator end(const intMatrix matrix) const;
+            iterator operator++() const;
+            iterator operator*(intMatrix matrix) const;
+            
+        };
+        
 
 
 
-    };
-    
-    intMatrix::intMatrix(Dimensions dims, int init_num){
-
-        }
-
-
-
-}
+};
+    bool all(const intMatrix matrix);
+    bool any(const intMatrix matrix);
+//TODO symmetric 
 
 
 #endif //INTMATRIX_H
