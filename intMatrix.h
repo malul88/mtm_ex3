@@ -9,11 +9,15 @@ namespace mtm {
     class intMatrix
     {
     private:
-       int** matrix;
-       Dimensions dimensions;
+        int** matrix;
+        Dimensions dimensions;
     public:
-        intMatrix(Dimensions dims,int init_num);
+        intMatrix(Dimensions dims,int init_num = 0);
+        intMatrix(const intMatrix& intmatrix);
         ~intMatrix();
+        intMatrix& operator=(const intMatrix& intmatrix);
+
+
         intMatrix& identity(Dimensions dims);
         int height(const intMatrix matrix);
         int width(const intMatrix matrix);
@@ -44,16 +48,16 @@ namespace mtm {
             iterator end(const intMatrix matrix) const;
             iterator operator++() const;
             iterator operator*(intMatrix matrix) const;
-            
+
         };
-        
 
 
 
-};
+
+    };
     bool all(const intMatrix matrix);
     bool any(const intMatrix matrix);
-//TODO symmetric 
+//TODO symmetric
 
 
 #endif //INTMATRIX_H
