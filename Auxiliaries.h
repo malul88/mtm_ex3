@@ -1,31 +1,63 @@
-#ifndef EX3_AUXILARIES_H
-#define EX3_AUXILARIES_H
-
+#ifndef INTMATRIX_H
+#define INTMATRIX_H
 #include <string>
 #include <iostream>
+#include "Auxiliaries.h"
 
 
 namespace mtm {
-    class Dimensions {
-        unsigned int row, col;
+    class intMatrix
+    {
+    private:
+        int** matrix;
+        Dimensions dimensions;
     public:
-        Dimensions(unsigned int row_t, unsigned int col_t) : row(row_t), col(col_t) {}
+        intMatrix(Dimensions dims,int init_num = 0);
+        intMatrix(const intMatrix& intmatrix);
+        ~intMatrix();
+        intMatrix& operator=(const intMatrix& intmatrix);
 
-        std::string toString() const;
 
-        bool operator==(const Dimensions &other) const;
+        intMatrix& identity(Dimensions dims);
+        int height(const intMatrix matrix);
+        int width(const intMatrix matrix);
+        int size(const intMatrix matrix);
+        intMatrix transpose(const intMatrix matrix);
+        intMatrix operator+(const intMatrix matrix) const;
+        intMatrix operator-() const;
+        intMatrix operator-(const intMatrix matrix) const;
+        intMatrix operator+(const int x) const;
+        intMatrix operator+=(const int x) const;
+        std::ostream& operator<<(std::ostream& os) const;
+        intMatrix operator()(const int col, const int row) const;
+        intMatrix& operator()(const int col, const int row);
+        bool operator<(intMatrix matrix);
+        bool operator>(intMatrix matrix);
+        bool operator>=(intMatrix matrix);
+        bool operator<=(intMatrix matrix);
+        bool operator==(intMatrix matrix);
+        bool operator!=(intMatrix matrix);
+        class iterator
+        {
+        private:
+            int i;
+        public:
+            iterator();
+            ~iterator();
+            iterator begin(const intMatrix matrix) const;
+            iterator end(const intMatrix matrix) const;
+            iterator operator++() const;
+            iterator operator*(intMatrix matrix) const;
 
-        bool operator!=(const Dimensions &other) const;
+        };
 
-        int getRow() const;
 
-        int getCol() const;
 
-        
+
     };
+    bool all(const intMatrix matrix);
+    bool any(const intMatrix matrix);
+//TODO symmetric
 
-    std::string printMatrix(const int *matrix, const Dimensions &dim);
-}
 
-
-#endif //EX3_AUXILARIES_H
+#endif //INTMATRIX_H
