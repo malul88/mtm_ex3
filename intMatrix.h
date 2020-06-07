@@ -17,10 +17,10 @@ namespace mtm {
         ~intMatrix();
         intMatrix& operator=(const intMatrix& matrix1);
         intMatrix identity(int dim);
-        int height();
-        int width();
-        int size();
-        intMatrix transpose();
+        int height() const ;
+        int width() const ;
+        int size() const ;
+        intMatrix transpose() const ;
         intMatrix operator+(const intMatrix& matrix1) const;
         intMatrix operator-() const;
         intMatrix operator-(const intMatrix matrix) const;
