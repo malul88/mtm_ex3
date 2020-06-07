@@ -77,23 +77,23 @@ intMatrix intMatrix::identity(int dim) {
     return result;
 }
 
-int intMatrix::height() {
+int intMatrix::height() const {
     int result = dimensions.getRow();
     return result;
 }
 
-int intMatrix::width() {
+int intMatrix::width() const {
     int result = dimensions.getCol();
     return result;
 }
 
-int intMatrix::size() {
-    int result = this->height() * this->width();
+int intMatrix::size() const {
+    int result = (this->height()) * (this->width());
     return result;
 }
 
-intMatrix intMatrix::transpose() {
-    Dimensions transposed_dimensions(this->dimensions.getCol(), this->dimensions.getRow());  // in purpose in order to make transposed matrix
+intMatrix intMatrix::transpose() const {
+    Dimensions transposed_dimensions(this->dimensions.getCol(), this->dimensions.getRow());// in purpose in order to make transposed matrix
     intMatrix transposed(transposed_dimensions);
     for (int i = 0; i < dimensions.getCol(); ++i) {
         for (int j = 0; j < dimensions.getRow(); ++j) {
@@ -161,4 +161,3 @@ const int intMatrix::operator()(const int col, const int row) const{
 int& intMatrix::operator()(const int col, const int row){
     return this->matrix[col][row];
 }
-
