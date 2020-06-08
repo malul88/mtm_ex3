@@ -6,50 +6,74 @@
 
 
 namespace mtm {
-    class intMatrix
-    {
+    class intMatrix {
     private:
-        int** matrix;
+        int **matrix;
         Dimensions dimensions;
     public:
-        intMatrix(Dimensions dims,int init_num = 0);
-        intMatrix(const intMatrix& matrix1);
+        intMatrix(Dimensions dims, int init_num = 0);
+
+        intMatrix(const intMatrix &matrix1);
+
         ~intMatrix();
-        intMatrix& operator=(const intMatrix& matrix1);
+
+        intMatrix &operator=(const intMatrix &matrix1);
+
         intMatrix identity(int dim);
-        int height() const ;
-        int width() const ;
-        int size() const ;
-        intMatrix transpose() const ;
-        intMatrix operator+(const intMatrix& matrix1) const;
+
+        int height() const;
+
+        int width() const;
+
+        int size() const;
+
+        intMatrix transpose() const;
+
+        intMatrix operator+(const intMatrix &matrix1) const;
+
         intMatrix operator-() const;
+
         intMatrix operator-(const intMatrix matrix) const;
-        intMatrix& operator+=(const int x);
+
+        intMatrix &operator+=(const int x);
+
         intMatrix operator+(const int x) const;
-        friend std::ostream& operator<<(std::ostream& os,intMatrix& matrix1);
+
+        friend std::ostream &operator<<(std::ostream &os, intMatrix &matrix1);
+
         const int operator()(const int col, const int row) const;
-        int& operator()(const int col, const int row);
-        bool operator<(intMatrix matrix);
-        bool operator>(intMatrix matrix);
-        bool operator>=(intMatrix matrix);
-        bool operator<=(intMatrix matrix);
-        bool operator==(intMatrix matrix);
-        bool operator!=(intMatrix matrix);
-        class iterator
-        {
+
+        int &operator()(const int col, const int row);
+
+        intMatrix operator<(int n) const;
+
+        intMatrix operator>(int n) const;
+
+        intMatrix operator<=(int n) const;
+
+        intMatrix operator>=(int n) const;
+
+        intMatrix operator==(int n) const;
+
+        intMatrix operator!=(int n) const;
+
+        class iterator {
         private:
             int i;
         public:
             iterator();
+
             ~iterator();
+
             iterator begin(const intMatrix matrix) const;
+
             iterator end(const intMatrix matrix) const;
+
             iterator operator++() const;
+
             iterator operator*(intMatrix matrix) const;
 
         };
-
-
 
 
     };
