@@ -92,17 +92,19 @@ int intMatrix::size() const {
     return result;
 }
 
+//Create transposed matrix
 intMatrix intMatrix::transpose() const {
     Dimensions transposed_dimensions(this->dimensions.getCol(), this->dimensions.getRow());// in purpose in order to make transposed matrix
     intMatrix transposed(transposed_dimensions);
-    for (int i = 0; i < dimensions.getCol(); ++i) {
-        for (int j = 0; j < dimensions.getRow(); ++j) {
+    for (int i = 0; i < transposed.dimensions.getCol(); ++i) {
+        for (int j = 0; j < transposed.dimensions.getRow(); ++j) {
             transposed.matrix[i][j] = this->matrix[j][i];
         }
     }
     return transposed;
 }
 
+// Binary operator add matrix to other matrix and return the new summed matrix
 intMatrix intMatrix::operator+(const intMatrix &matrix1) const {
     intMatrix result(matrix1.dimensions);
     for (int i = 0; i < result.dimensions.getCol(); ++i) {
@@ -112,7 +114,7 @@ intMatrix intMatrix::operator+(const intMatrix &matrix1) const {
     }
     return result;
 }
-
+// Unary operator return the matrix where each element multiplied by -1
 intMatrix intMatrix::operator-() const {
     intMatrix result(this->dimensions);
     for (int i = 0; i <this->dimensions.getCol() ; ++i) {
@@ -127,6 +129,7 @@ intMatrix intMatrix::operator-() const {
     return result;
 }
 
+// Binary operator. return new matrix equals to mat1 - mat2
 intMatrix intMatrix::operator-(const intMatrix matrix1) const {
     intMatrix temp = -matrix1;
     intMatrix result(matrix1.dimensions);
@@ -160,4 +163,91 @@ const int intMatrix::operator()(const int col, const int row) const{
 
 int& intMatrix::operator()(const int col, const int row){
     return this->matrix[col][row];
+}
+
+intMatrix intMatrix::operator<(int n) const {
+    intMatrix result(this->dimensions);
+    for (int i = 0; i <dimensions.getCol() ; ++i) {
+        for (int j = 0; j <dimensions.getRow() ; ++j) {
+            if (this->matrix[i][j] < n){
+                result.matrix[i][j] = 1;
+            }
+        }
+    }
+    return result;
+}
+
+intMatrix intMatrix::operator>(int n) const {
+    intMatrix result(this->dimensions);
+    for (int i = 0; i <dimensions.getCol() ; ++i) {
+        for (int j = 0; j <dimensions.getRow() ; ++j) {
+            if (this->matrix[i][j] > n){
+                result.matrix[i][j] = 1;
+            }
+        }
+    }
+    return result;
+}
+
+intMatrix intMatrix::operator<=(int n) const {
+    intMatrix result(this->dimensions);
+    for (int i = 0; i <dimensions.getCol() ; ++i) {
+        for (int j = 0; j <dimensions.getRow() ; ++j) {
+            if (this->matrix[i][j] <= n){
+                result.matrix[i][j] = 1;
+            }
+        }
+    }
+    return result;
+}
+
+intMatrix intMatrix::operator>=(int n) const {
+    intMatrix result(this->dimensions);
+    for (int i = 0; i <dimensions.getCol() ; ++i) {
+        for (int j = 0; j <dimensions.getRow() ; ++j) {
+            if (this->matrix[i][j] >= n){
+                result.matrix[i][j] = 1;
+            }
+        }
+    }
+    return result;
+}
+
+intMatrix intMatrix::operator==(int n) const {
+    intMatrix result(this->dimensions);
+    for (int i = 0; i <dimensions.getCol() ; ++i) {
+        for (int j = 0; j <dimensions.getRow() ; ++j) {
+            if (this->matrix[i][j] == n){
+                result.matrix[i][j] = 1;
+            }
+        }
+    }
+    return result;
+}
+intMatrix intMatrix::operator!=(int n) const {
+    intMatrix result(this->dimensions);
+    for (int i = 0; i <dimensions.getCol() ; ++i) {
+        for (int j = 0; j <dimensions.getRow() ; ++j) {
+            if (this->matrix[i][j] != n){
+                result.matrix[i][j] = 1;
+            }
+        }
+    }
+    return result;
+}
+
+bool all(const intMatrix matrix){
+    bool check = true;
+    for (int i = 0; i <matrix.width(); ++i) {
+        for (int j = 0; j <matrix.height() ; ++j) {
+            if (matrix(i, j) == 0){
+                check = false;
+            }
+        }
+    }
+    return check;
+}
+
+bool any(const intMatrix matrix) {
+    return !all(matrix); //the compiler cant tell the difference between declaration and implementation
 }
