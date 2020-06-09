@@ -26,7 +26,7 @@ intMatrix::intMatrix(const intMatrix &intmatrix) : dimensions(intmatrix.dimensio
     for (int i = 0; i < col; i++) {
         matrix[i] = new int[row];
     }
-    for (int i = 0; i < col; i++) { // todo check index
+    for (int i = 0; i < col; i++) {
         for (int j = 0; j < row; j++) {
             matrix[i][j] = intmatrix.matrix[i][j];
         }
@@ -77,16 +77,19 @@ intMatrix intMatrix::identity(int dim) {
     return result;
 }
 
+// return the number of row in the matrix
 int intMatrix::height() const {
     int result = dimensions.getRow();
     return result;
 }
 
+//return the number of columns in the matrix
 int intMatrix::width() const {
     int result = dimensions.getCol();
     return result;
 }
 
+//return the number of elements in the matrix
 int intMatrix::size() const {
     int result = (this->height()) * (this->width());
     return result;
@@ -122,10 +125,6 @@ intMatrix intMatrix::operator-() const {
             result.matrix[i][j] = -this->matrix[i][j];
         }
     }
-    for (int i = 0; i <this->dimensions.getCol() ; ++i) {
-        delete [] this->matrix[i];
-    }
-    delete [] this->matrix;
     return result;
 }
 
@@ -156,13 +155,13 @@ intMatrix intMatrix::operator+(const int x) const {
     return result;
 }
 
-const int intMatrix::operator()(const int col, const int row) const{
-    const int result = this->matrix[col][row];
+const int intMatrix::operator()(const int row, const int col) const{
+    const int result = this->matrix[row][col];
     return result;
 }
 
-int& intMatrix::operator()(const int col, const int row){
-    return this->matrix[col][row];
+int& intMatrix::operator()(const int row, const int col){
+    return this->matrix[row][col];
 }
 
 intMatrix intMatrix::operator<(int n) const {
@@ -235,8 +234,9 @@ intMatrix intMatrix::operator!=(int n) const {
     }
     return result;
 }
+bool all(const intMatrix matrix); //TODO put the declaration in the header file
 
-bool all(const intMatrix matrix){
+bool all(intMatrix matrix) {
     bool check = true;
     for (int i = 0; i <matrix.width(); ++i) {
         for (int j = 0; j <matrix.height() ; ++j) {
@@ -248,6 +248,29 @@ bool all(const intMatrix matrix){
     return check;
 }
 
-bool any(const intMatrix matrix) {
+bool any(intMatrix matrix) {
     return !all(matrix); //the compiler cant tell the difference between declaration and implementation
+}
+
+int* intMatrix::iterator::begin(intMatrix matrix1) {
+    dims = matrix1.dimensions;
+    this->i = matrix1(0, 0);
+    return &i;
+}
+
+int* intMatrix::iterator::end(intMatrix matrix1){
+    int * result = &matrix1(matrix1.height() -1 ,matrix1.width());
+    return result;
+}
+
+
+int main(){
+    Dimensions dim4_4(4,4);
+    intMatrix matrix1(dim4_4,3);
+    intMatrix matrix2(dim4_4,5);
+    intMatrix matrix3 = matrix1 + matrix2;
+    intMatrix matrix5(dim4_4);
+    matrix5 = -matrix3;
+
+    return 0;
 }
