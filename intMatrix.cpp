@@ -7,12 +7,26 @@ using namespace mtm;
 intMatrix::intMatrix(Dimensions dims, int init_num) : dimensions(dims), matrix(nullptr) { //todo check initialize list
     int row = dimensions.getRow();
     int col = dimensions.getCol();
-    matrix = new int *[row];
-    for (int i = 0; i < row; i++) {
-        matrix[i] = new int[col];
+    matrix = new int *[col];
+    for (int i = 0; i < col; i++) {
+        matrix[i] = new int[row];
     }
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < col; j++) {
+    for (int i = 0; i < col; i++) {
+        for (int j = 0; j < row; j++) {
+            matrix[i][j] = init_num;
+        }
+    }
+}
+
+intMatrix::intMatrix(int init_num) : dimensions(1,1), matrix(nullptr){
+    int row = 1;
+    int col = 1;
+    matrix = new int *[col];
+    for (int i = 0; i < col; i++) {
+        matrix[i] = new int[row];
+    }
+    for (int i = 0; i < col; i++) {
+        for (int j = 0; j < row; j++) {
             matrix[i][j] = init_num;
         }
     }
@@ -234,6 +248,8 @@ intMatrix intMatrix::operator!=(int n) const {
     }
     return result;
 }
+
+
 bool all(const intMatrix matrix); //TODO put the declaration in the header file
 
 bool all(intMatrix matrix) {
@@ -252,25 +268,122 @@ bool any(intMatrix matrix) {
     return !all(matrix); //the compiler cant tell the difference between declaration and implementation
 }
 
-int* intMatrix::iterator::begin(intMatrix matrix1) {
-    dims = matrix1.dimensions;
-    this->i = matrix1(0, 0);
-    return &i;
+
+intMatrix::iterator intMatrix::begin() {
+    iterator it(dimensions,0, this->matrix);
+    return it;
 }
 
-int* intMatrix::iterator::end(intMatrix matrix1){
-    int * result = &matrix1(matrix1.height() -1 ,matrix1.width());
-    return result;
+intMatrix::iterator intMatrix::end(){
+    iterator it(dimensions,dimensions.getCol()*dimensions.getRow(), this->matrix);
+    return it;
 }
 
 
-int main(){
-    Dimensions dim4_4(4,4);
-    intMatrix matrix1(dim4_4,3);
-    intMatrix matrix2(dim4_4,5);
-    intMatrix matrix3 = matrix1 + matrix2;
-    intMatrix matrix5(dim4_4);
-    matrix5 = -matrix3;
+intMatrix::iterator::iterator(Dimensions dims, int i, int** matrix) : dims(dims), index(i), matrix(matrix) {
+}
 
-    return 0;
+intMatrix::iterator::iterator(const iterator &it):dims(it.dims), index(it.index), matrix(it.matrix){
+}
+
+intMatrix::iterator& intMatrix::iterator::operator=(const intMatrix::iterator &it) {
+    if (this == &it){
+        return *this;
+    }
+    dims = it.dims;
+    matrix = it.matrix;
+    index = it.index;
+    return *this;
+}
+
+int &intMatrix::iterator::operator*() const {
+    int column = index % dims.getCol();
+    int row = index / dims.getCol();
+    return matrix[row][column];
+}
+
+intMatrix::iterator intMatrix::iterator::operator++() {
+    index++;
+    return *this;
+}
+
+
+intMatrix::iterator intMatrix::iterator::operator++(int) {
+    iterator it = *this;
+    this->index++;
+    return it;
+}
+
+bool intMatrix::iterator::operator!=(const intMatrix::iterator &it) const {
+    bool b = ((dims != it.dims) || (index != it.index) || (matrix != it.matrix));
+    return b;
+}
+
+bool intMatrix::iterator::operator==(const intMatrix::iterator &it) const {
+    return !operator!=(it);
+}
+
+intMatrix::const_iterator::const_iterator(Dimensions dims, int i,  int** matrix) : dims(dims), index(i), matrix(matrix) {
+}
+
+
+intMatrix::const_iterator::const_iterator(const const_iterator &it):dims(it.dims), index(it.index), matrix(it.matrix){
+}
+
+intMatrix::const_iterator& intMatrix::const_iterator::operator=(const intMatrix::const_iterator &it) {
+    if (this == &it){
+        return *this;
+    }
+    dims = it.dims;
+    matrix = it.matrix;
+    index = it.index;
+    return *this;
+}
+
+const int intMatrix::const_iterator::operator*() const {
+    int column = index % dims.getCol();
+    int row = index / dims.getCol();
+    return matrix[row][column];
+}
+
+intMatrix::const_iterator intMatrix::const_iterator::operator++() {
+    index++;
+    return *this;
+}
+
+
+intMatrix::const_iterator intMatrix::const_iterator::operator++(int) {
+    const_iterator it = *this;
+    this->index++;
+    return it;
+}
+
+bool intMatrix::const_iterator::operator!=(const intMatrix::const_iterator &it) const {
+    bool b = ((dims != it.dims) || (index != it.index) || (matrix != it.matrix));
+    return b;
+}
+
+bool intMatrix::const_iterator::operator==(const intMatrix::const_iterator &it) const {
+    return !operator!=(it);
+}
+
+intMatrix::const_iterator intMatrix::begin() const {
+    const_iterator it(dimensions,0, this->matrix);
+    return it;
+}
+
+intMatrix::const_iterator intMatrix::end() const {
+    const_iterator it(dimensions,dimensions.getCol()*dimensions.getRow(), this->matrix);
+    return it;
+}
+
+
+
+
+intMatrix operator+(intMatrix& matrix1, const intMatrix& matrix2){
+    if (matrix1.size() == 1){
+        Dimensions dims(matrix2.height(),matrix2.width());
+        intMatrix result(dims,matrix1(0,0));
+        return result + matrix2;
+    }
 }
