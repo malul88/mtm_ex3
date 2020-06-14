@@ -4,7 +4,6 @@
 #include <iostream>
 #include "Auxiliaries.h"
 
-
 namespace mtm {
 
     class intMatrix {
@@ -13,6 +12,8 @@ namespace mtm {
         Dimensions dimensions;
     public:
         intMatrix(Dimensions dims, int init_num = 0);
+
+        intMatrix(int init_num );
 
         intMatrix(const intMatrix &matrix1);
 
@@ -36,11 +37,24 @@ namespace mtm {
 
         intMatrix operator-(const intMatrix matrix) const;
 
-        intMatrix &operator+=(const int x);
+        intMatrix& operator+=(const int x);
 
         intMatrix operator+(const int x) const;
 
-        friend std::ostream &operator<<(std::ostream &os, intMatrix &matrix1);
+        friend std::ostream& operator<<(std::ostream &os, const intMatrix &matrix1) {
+            int squared_dims = matrix1.intMatrix::size();
+            int* mat_to_array = new int[squared_dims]; //TODO template and check where is the implementation
+            int rows = matrix1.dimensions.getRow();
+            int cols = matrix1.dimensions.getCol();
+            int counter = 0;
+            for (int i = 0; i <rows; ++i) {
+                for (int j = 0; j <cols; ++j) {
+                    mat_to_array[counter++] =  matrix1.matrix[i][j];
+                }
+            }
+
+            return os << printMatrix(mat_to_array,matrix1.dimensions) << std::endl;
+        }
 
         const int operator()(const int col, const int row) const;
 
@@ -58,79 +72,87 @@ namespace mtm {
 
         intMatrix operator!=(int n) const;
 
+
         class iterator {
         private:
-            int& i;
             Dimensions dims;
+            int index;
+            int** matrix;
         public:
-            iterator();
+            iterator(Dimensions dims, int i, int** matrix);
 
-            ~iterator();
+            ~iterator() = default;
 
-            iterator(const iterator& x);
+            iterator(const iterator &it) ;
 
-            iterator operator=(const iterator& x);
+            iterator& operator=(const iterator& x);
 
-            int* begin(intMatrix matrix);
-
-            int* end(intMatrix matrix);
-
-            int operator*(intMatrix matrix) const;
+            int& operator*() const;
 
             iterator operator++();
 
             iterator operator++(int);
 
-            iterator operator==(const iterator& x) const;
+            bool operator==(const iterator& x) const;
 
-            iterator operator!=(const iterator& x) const;
+            bool operator!=(const iterator& x) const;
 
         };
         class const_iterator {
         private:
-            int i;
+            Dimensions dims;
+            int index;
+            int** matrix;
         public:
-            const_iterator();
+            const_iterator(Dimensions dims, int i, int** matrix);
 
-            ~const_iterator();
+            ~const_iterator() = default;
 
-            const_iterator(const const_iterator& x);
+            const_iterator(const const_iterator& it);
 
-            const_iterator operator=(const const_iterator& x);
+            const_iterator& operator=(const const_iterator& x);
 
-            const_iterator begin(const intMatrix matrix) const;
-
-            const_iterator end(const intMatrix matrix) const;
-
-            const_iterator operator*(intMatrix matrix) const;
+            const int operator*() const;
 
             const_iterator operator++();
 
             const_iterator operator++(int);
 
-            const_iterator operator==(const const_iterator& x) const;
+            bool operator==(const const_iterator& x) const;
 
-            const_iterator operator!=(const const_iterator& x) const;
+            bool operator!=(const const_iterator& x) const;
 
         };
+        iterator begin();
+
+        iterator end();
+
+        const_iterator begin() const;
+
+        const_iterator end() const;
 
 
     };
+    intMatrix operator+(intMatrix x,const intMatrix& matrix1);
+
+
+//    std::ostream& operator<<(std::ostream &os, intMatrix &matrix1){
+//        int squared_dims = matrix1.intMatrix::size();
+//        int* mat_to_array = new int[squared_dims];
+//        for (int i = 0; i <matrix1.height() ; ++i) {
+//            for (int j = 0; j <matrix1.width() ; ++j) {
+//                mat_to_array[i+j] = matrix1(i, j);
+//            }
+//        }
+//        return os << printMatrix(mat_to_array,matrix1.dimensions) << std::endl;
+//    }
 
     bool any(const intMatrix matrix);
 //TODO symmetric
 
 
-//    std::ostream& operator<<(std::ostream& os,intMatrix& matrix1){
-//        int squared_dims = matrix1.intMatrix::size();
-//        int* mat_to_array = new int[squared_dims];
-//        for (int i = 0; i <matrix1.dimensions.getRow() ; ++i) {
-//            for (int j = 0; j <matrix1.dimensions.getCol() ; ++j) {
-//                mat_to_array[i+j] = matrix1.matrix[i][j];
-//            }
-//        }
-//        return os << printMatrix(mat_to_array,matrix1.dimensions) << std::endl;
-//    }
+
 }
+
 #endif //INTMATRIX_H
 
