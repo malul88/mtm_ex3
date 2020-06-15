@@ -6,22 +6,22 @@
 
 namespace mtm {
 
-    class intMatrix {
+    class IntMatrix {
     private:
         int **matrix;
         Dimensions dimensions;
     public:
-        intMatrix(Dimensions dims, int init_num = 0);
+        IntMatrix(Dimensions dims, int init_num = 0);
 
-        intMatrix(int init_num );
+        IntMatrix(int init_num );
 
-        intMatrix(const intMatrix &matrix1);
+        IntMatrix(const IntMatrix &matrix1);
 
-        ~intMatrix();
+        ~IntMatrix();
 
-        intMatrix &operator=(const intMatrix &matrix1);
+        IntMatrix &operator=(const IntMatrix &matrix1);
 
-        intMatrix identity(int dim);
+        static IntMatrix Identity(int dim); //todo static??
 
         int height() const;
 
@@ -29,20 +29,20 @@ namespace mtm {
 
         int size() const;
 
-        intMatrix transpose() const;
+        IntMatrix transpose() const;
 
-        intMatrix operator+(const intMatrix &matrix1) const;
+        //IntMatrix operator+(const IntMatrix &matrix1) const;
 
-        intMatrix operator-() const;
+        IntMatrix operator-() const;
 
-        intMatrix operator-(const intMatrix matrix) const;
+        IntMatrix operator-(const IntMatrix matrix) const;
 
-        intMatrix& operator+=(const int x);
+        IntMatrix& operator+=(const int x);
 
-        intMatrix operator+(const int x) const;
+        //IntMatrix operator+(const int x) const;
 
-        friend std::ostream& operator<<(std::ostream &os, const intMatrix &matrix1) {
-            int squared_dims = matrix1.intMatrix::size();
+        friend std::ostream& operator<<(std::ostream &os, const IntMatrix &matrix1) {
+            int squared_dims = matrix1.IntMatrix::size();
             int* mat_to_array = new int[squared_dims]; //TODO template and check where is the implementation
             int rows = matrix1.dimensions.getRow();
             int cols = matrix1.dimensions.getCol();
@@ -60,17 +60,17 @@ namespace mtm {
 
         int &operator()(const int col, const int row);
 
-        intMatrix operator<(int n) const;
+        IntMatrix operator<(int n) const;
 
-        intMatrix operator>(int n) const;
+        IntMatrix operator>(int n) const;
 
-        intMatrix operator<=(int n) const;
+        IntMatrix operator<=(int n) const;
 
-        intMatrix operator>=(int n) const;
+        IntMatrix operator>=(int n) const;
 
-        intMatrix operator==(int n) const;
+        IntMatrix operator==(int n) const;
 
-        intMatrix operator!=(int n) const;
+        IntMatrix operator!=(int n) const;
 
 
         class iterator {
@@ -133,11 +133,12 @@ namespace mtm {
 
 
     };
-    intMatrix operator+(intMatrix x,const intMatrix& matrix1);
+    IntMatrix operator+(const IntMatrix& matrix1 , const IntMatrix& matrix2);
+    bool any(const IntMatrix& matrix);
+    bool all(const IntMatrix& matrix); //TODO put the declaration in the header file
 
-
-//    std::ostream& operator<<(std::ostream &os, intMatrix &matrix1){
-//        int squared_dims = matrix1.intMatrix::size();
+//    std::ostream& operator<<(std::ostream &os, IntMatrix &matrix1){
+//        int squared_dims = matrix1.IntMatrix::size();
 //        int* mat_to_array = new int[squared_dims];
 //        for (int i = 0; i <matrix1.height() ; ++i) {
 //            for (int j = 0; j <matrix1.width() ; ++j) {
@@ -147,12 +148,7 @@ namespace mtm {
 //        return os << printMatrix(mat_to_array,matrix1.dimensions) << std::endl;
 //    }
 
-    bool any(const intMatrix matrix);
-//TODO symmetric
-
-
 
 }
 
 #endif //INTMATRIX_H
-
