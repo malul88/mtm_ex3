@@ -1,4 +1,4 @@
-#include "IntMatrix.h"
+#include "intMatrix.h"
 #include "Auxiliaries.h"
 
 using namespace mtm;
@@ -7,27 +7,38 @@ using namespace mtm;
 IntMatrix::IntMatrix(Dimensions dims, int init_num) : dimensions(dims), matrix(nullptr) { //todo check initialize list
     int row = dimensions.getRow();
     int col = dimensions.getCol();
-    matrix = new int *[col];
-    for (int i = 0; i < col; i++) {
-        matrix[i] = new int[row];
+    matrix = new int*[row];
+    if (row)
+    {
+        matrix[0] = new int[row * col];
+        for (int i = 1; i < row; ++i)
+            matrix[i] = matrix[0] + i * col;
     }
-    for (int i = 0; i < col; i++) {
-        for (int j = 0; j < row; j++) {
+//    matrix = new int *[col];
+//    for (int i = 0; i < col; i++) {
+//        matrix[i] = new int[row];
+//    }
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
             matrix[i][j] = init_num;
         }
     }
 }
 
 /// matrix cast constructor (int to IntMatrix)
-IntMatrix::IntMatrix(int init_num) : dimensions(1, 1), matrix(nullptr){
+IntMatrix::IntMatrix(int init_num) : dimensions(1, 1), matrix(nullptr) {
     int row = 1;
     int col = 1;
-    matrix = new int *[col];
-    for (int i = 0; i < col; i++) {
-        matrix[i] = new int[row];
-    }
-    for (int i = 0; i < col; i++) {
-        for (int j = 0; j < row; j++) {
+    matrix = new int *[row];
+    matrix[0] = new int[row * col];
+    for (int i = 1; i < row; ++i)
+        matrix[i] = matrix[0] + i * col;
+//    matrix = new int *[col];
+//    for (int i = 0; i < col; i++) {
+//        matrix[i] = new int[row];
+//    }
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
             matrix[i][j] = init_num;
         }
     }
@@ -37,12 +48,19 @@ IntMatrix::IntMatrix(int init_num) : dimensions(1, 1), matrix(nullptr){
 IntMatrix::IntMatrix(const IntMatrix &intmatrix) : dimensions(intmatrix.dimensions), matrix(nullptr) {
     int row = dimensions.getRow();
     int col = dimensions.getCol();
-    matrix = new int *[col];
-    for (int i = 0; i < col; i++) {
-        matrix[i] = new int[row];
+    matrix = new int*[row];
+    if (row)
+    {
+        matrix[0] = new int[row * col];
+        for (int i = 1; i < row; ++i)
+            matrix[i] = matrix[0] + i * col;
     }
-    for (int i = 0; i < col; i++) {
-        for (int j = 0; j < row; j++) {
+//    matrix = new int *[col];
+//    for (int i = 0; i < col; i++) {
+//        matrix[i] = new int[row];
+//    }
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
             matrix[i][j] = intmatrix.matrix[i][j];
         }
     }
@@ -50,11 +68,13 @@ IntMatrix::IntMatrix(const IntMatrix &intmatrix) : dimensions(intmatrix.dimensio
 
 /// matrix destructor
 IntMatrix::~IntMatrix() {
-    int col = this->dimensions.getCol();
-    for (int i = 0; i < col; i++) {
-        delete[] matrix[i];
-    }
-    delete[] matrix;
+    int row = this->dimensions.getRow();
+    if (row) delete [] matrix[0];
+    delete [] matrix;
+//    for (int i = 0; i < col; i++) {
+//        delete[] matrix[i];
+//    }
+//    delete[] matrix;
 }
 
 
@@ -65,20 +85,18 @@ IntMatrix &IntMatrix::operator=(const IntMatrix &intmatrix) {
     }
     int row = intmatrix.dimensions.getRow();
     int col = intmatrix.dimensions.getCol();
-    for (int i = 0; i < col; i++) {
-        delete[] matrix[i];
-    }
-    delete[] matrix;
-
-    matrix = new int *[col];
-    for (int i = 0; i < col; i++) {
-        matrix[i] = new int[row];
-    }
-    for (int i = 0; i < col; i++) {
-        for (int j = 0; j < row; j++) {
+    if (row) delete [] matrix[0];
+    delete [] matrix;
+    matrix = new int *[row];
+    matrix[0] = new int[row * col];
+    for (int i = 1; i < row; ++i)
+        matrix[i] = matrix[0] + i * col;
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
             matrix[i][j] = intmatrix.matrix[i][j];
         }
     }
+    this->dimensions = intmatrix.dimensions;
     return *this;
 }
 
@@ -114,8 +132,10 @@ int IntMatrix::size() const {
 IntMatrix IntMatrix::transpose() const {
     Dimensions transposed_dimensions(this->dimensions.getCol(), this->dimensions.getRow());// in purpose in order to make transposed matrix
     IntMatrix transposed(transposed_dimensions);
-    for (int i = 0; i < transposed.dimensions.getCol(); ++i) {
-        for (int j = 0; j < transposed.dimensions.getRow(); ++j) {
+    int col = transposed.dimensions.getCol();
+    int row = transposed.dimensions.getRow();
+    for (int i = 0; i < row; ++i) {
+        for (int j = 0; j < col; ++j) {
             transposed.matrix[i][j] = this->matrix[j][i];
         }
     }
@@ -136,25 +156,28 @@ IntMatrix IntMatrix::transpose() const {
 /// Unary operator return the matrix where each element multiplied by -1
 IntMatrix IntMatrix::operator-() const {
     IntMatrix result(this->dimensions);
-    for (int i = 0; i <this->dimensions.getCol() ; ++i) {
-        for (int j = 0; j <this->dimensions.getCol() ; ++j) {
+    int col = this->dimensions.getCol();
+    int row = this->dimensions.getRow();
+    for (int i = 0; i < row; ++i) {
+        for (int j = 0; j < col; ++j) {
             result.matrix[i][j] = -this->matrix[i][j];
         }
     }
     return result;
 }
 
-///// Binary operator. return new matrix equals to mat1 - mat2
-//IntMatrix IntMatrix::operator-(const IntMatrix matrix1) const { // todo check
-//    IntMatrix temp = -matrix1;
-//    IntMatrix result(matrix1.dimensions);
-//    result = this->operator+(temp);
-//    return result;
-//}
+/// Binary operator. return new matrix equals to mat1 - mat2
+IntMatrix IntMatrix::operator-(const IntMatrix matrix1) const { // todo check
+    IntMatrix temp = -matrix1;
+    IntMatrix result = *this + temp;
+    return result;
+}
 
 IntMatrix& IntMatrix::operator+=(const int x) {
-    for (int i = 0; i <this->dimensions.getCol() ; ++i) {
-        for (int j = 0; j <this->dimensions.getRow() ; ++j) {
+    int row = this->dimensions.getRow();
+    int col = this->dimensions.getCol();
+    for (int i = 0; i < row ; ++i) {
+        for (int j = 0; j < col ; ++j) {
             this->matrix[i][j] += x;
         }
     }
@@ -182,8 +205,10 @@ int& IntMatrix::operator()(const int row, const int col){
 
 IntMatrix IntMatrix::operator<(int n) const {
     IntMatrix result(this->dimensions);
-    for (int i = 0; i <dimensions.getCol() ; ++i) {
-        for (int j = 0; j <dimensions.getRow() ; ++j) {
+    int row = this->dimensions.getRow();
+    int col = this->dimensions.getCol();
+    for (int i = 0; i < row ; ++i) {
+        for (int j = 0; j < col ; ++j) {
             if (this->matrix[i][j] < n){
                 result.matrix[i][j] = 1;
             }
@@ -194,8 +219,10 @@ IntMatrix IntMatrix::operator<(int n) const {
 
 IntMatrix IntMatrix::operator>(int n) const {
     IntMatrix result(this->dimensions);
-    for (int i = 0; i <dimensions.getCol() ; ++i) {
-        for (int j = 0; j <dimensions.getRow() ; ++j) {
+    int row = this->dimensions.getRow();
+    int col = this->dimensions.getCol();
+    for (int i = 0; i < row ; ++i) {
+        for (int j = 0; j < col ; ++j) {
             if (this->matrix[i][j] > n){
                 result.matrix[i][j] = 1;
             }
@@ -206,8 +233,10 @@ IntMatrix IntMatrix::operator>(int n) const {
 
 IntMatrix IntMatrix::operator<=(int n) const {
     IntMatrix result(this->dimensions);
-    for (int i = 0; i <dimensions.getCol() ; ++i) {
-        for (int j = 0; j <dimensions.getRow() ; ++j) {
+    int row = this->dimensions.getRow();
+    int col = this->dimensions.getCol();
+    for (int i = 0; i < row ; ++i) {
+        for (int j = 0; j < col ; ++j) {
             if (this->matrix[i][j] <= n){
                 result.matrix[i][j] = 1;
             }
@@ -218,8 +247,10 @@ IntMatrix IntMatrix::operator<=(int n) const {
 
 IntMatrix IntMatrix::operator>=(int n) const {
     IntMatrix result(this->dimensions);
-    for (int i = 0; i <dimensions.getCol() ; ++i) {
-        for (int j = 0; j <dimensions.getRow() ; ++j) {
+    int row = this->dimensions.getRow();
+    int col = this->dimensions.getCol();
+    for (int i = 0; i < row ; ++i) {
+        for (int j = 0; j < col ; ++j) {
             if (this->matrix[i][j] >= n){
                 result.matrix[i][j] = 1;
             }
@@ -230,8 +261,10 @@ IntMatrix IntMatrix::operator>=(int n) const {
 
 IntMatrix IntMatrix::operator==(int n) const {
     IntMatrix result(this->dimensions);
-    for (int i = 0; i <dimensions.getCol() ; ++i) {
-        for (int j = 0; j <dimensions.getRow() ; ++j) {
+    int row = dimensions.getRow();
+    int col = dimensions.getCol();
+    for (int i = 0; i < row ; ++i) {
+        for (int j = 0; j < col ; ++j) {
             if (this->matrix[i][j] == n){
                 result.matrix[i][j] = 1;
             }
@@ -241,8 +274,10 @@ IntMatrix IntMatrix::operator==(int n) const {
 }
 IntMatrix IntMatrix::operator!=(int n) const {
     IntMatrix result(this->dimensions);
-    for (int i = 0; i <dimensions.getCol() ; ++i) {
-        for (int j = 0; j <dimensions.getRow() ; ++j) {
+    int row = this->dimensions.getRow();
+    int col = this->dimensions.getCol();
+    for (int i = 0; i < row ; ++i) {
+        for (int j = 0; j < col ; ++j) {
             if (this->matrix[i][j] != n){
                 result.matrix[i][j] = 1;
             }
@@ -251,10 +286,10 @@ IntMatrix IntMatrix::operator!=(int n) const {
     return result;
 }
 
-bool all(const IntMatrix& matrix) {
+bool mtm::all(const IntMatrix& matrix) {
     bool check = true;
-    for (int i = 0; i <matrix.width(); ++i) {
-        for (int j = 0; j <matrix.height() ; ++j) {
+    for (int i = 0; i <matrix.height(); ++i) {
+        for (int j = 0; j <matrix.width() ; ++j) {
             if (matrix(i, j) == 0){
                 check = false;
             }
@@ -263,9 +298,9 @@ bool all(const IntMatrix& matrix) {
     return check;
 }
 
-bool any(const IntMatrix& matrix) {
-    for (int i = 0; i <matrix.width(); ++i) {
-        for (int j = 0; j <matrix.height() ; ++j) {
+bool mtm::any(const IntMatrix& matrix) {
+    for (int i = 0; i <matrix.height(); ++i) {
+        for (int j = 0; j <matrix.width() ; ++j) {
             if (matrix(i, j) != 0){
                 return true;
             }
@@ -383,7 +418,7 @@ IntMatrix::const_iterator IntMatrix::end() const {
     return it;
 }
 
-IntMatrix operator+(const IntMatrix& matrix1, const IntMatrix& matrix2){
+IntMatrix mtm::operator+(const IntMatrix& matrix1, const IntMatrix& matrix2){
     if (matrix1.size() == 1){
         IntMatrix new_mat = matrix2;
         int num = matrix1(0,0);
@@ -413,3 +448,5 @@ IntMatrix operator+(const IntMatrix& matrix1, const IntMatrix& matrix2){
         return new_mat;
     }
 }
+
+
