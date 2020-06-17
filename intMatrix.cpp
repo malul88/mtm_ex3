@@ -1,10 +1,9 @@
 #include "intMatrix.h"
-#include "Auxiliaries.h"
 
 using namespace mtm;
 
 /// matrix constructor
-IntMatrix::IntMatrix(Dimensions dims, int init_num) : dimensions(dims), matrix(nullptr) { //todo check initialize list
+IntMatrix::IntMatrix(Dimensions dims, int init_num) : dimensions(dims), matrix(nullptr) {
     int row = dimensions.getRow();
     int col = dimensions.getCol();
     matrix = new int*[row];
@@ -142,16 +141,6 @@ IntMatrix IntMatrix::transpose() const {
     return transposed;
 }
 
-//// Binary operator add matrix to other matrix and return the new summed matrix
-//IntMatrix IntMatrix::operator+(const IntMatrix &matrix1) const { todo dlt
-//    IntMatrix result(matrix1.dimensions);
-//    for (int i = 0; i < result.dimensions.getCol(); ++i) {
-//        for (int j = 0; j < result.dimensions.getRow(); ++j) {
-//            result.matrix[i][j] = this->matrix[i][j] + matrix1.matrix[i][j];
-//        }
-//    }
-//    return result;
-//}
 
 /// Unary operator return the matrix where each element multiplied by -1
 IntMatrix IntMatrix::operator-() const {
@@ -167,7 +156,7 @@ IntMatrix IntMatrix::operator-() const {
 }
 
 /// Binary operator. return new matrix equals to mat1 - mat2
-IntMatrix IntMatrix::operator-(const IntMatrix matrix1) const { // todo check
+IntMatrix IntMatrix::operator-(const IntMatrix matrix1) const {
     IntMatrix temp = -matrix1;
     IntMatrix result = *this + temp;
     return result;
@@ -184,15 +173,6 @@ IntMatrix& IntMatrix::operator+=(const int x) {
     return *this;
 }
 
-//IntMatrix IntMatrix::operator+(const int x) const { todo dlt
-//    IntMatrix result(this->dimensions);
-//    for (int i = 0; i <result.dimensions.getCol() ; ++i) {
-//        for (int j = 0; j <result.dimensions.getRow() ; ++j) {
-//            result.matrix[i][j] = this->matrix[i][j] + x;
-//        }
-//    }
-//    return result;
-//}
 
 const int IntMatrix::operator()(const int row, const int col) const{
     const int result = this->matrix[row][col];
