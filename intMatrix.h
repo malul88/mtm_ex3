@@ -21,7 +21,7 @@ namespace mtm {
 
         IntMatrix &operator=(const IntMatrix &matrix1);
 
-        static IntMatrix Identity(int dim); //todo static??
+        static IntMatrix Identity(int dim);
 
         int height() const;
 
@@ -30,8 +30,6 @@ namespace mtm {
         int size() const;
 
         IntMatrix transpose() const;
-
-        //IntMatrix operator+(const IntMatrix &matrix1) const;
 
         IntMatrix operator-() const;
 
@@ -42,17 +40,6 @@ namespace mtm {
         //IntMatrix operator+(const int x) const;
 
         friend std::ostream& operator<<(std::ostream &os, const IntMatrix &matrix1) {
-//            int squared_dims = matrix1.IntMatrix::size();
-//            int* mat_to_array = new int[squared_dims]; //TODO template and check where is the implementation
-//            int rows = matrix1.dimensions.getRow();
-//            int cols = matrix1.dimensions.getCol();
-//            int counter = 0;
-//            for (int i = 0; i <rows; ++i) {
-//                for (int j = 0; j <cols; ++j) {
-//                    mat_to_array[counter++] =  matrix1.matrix[i][j];
-//                }
-//            }
-
             return os << printMatrix(matrix1.matrix[0],matrix1.dimensions) << std::endl;
         }
 
@@ -133,22 +120,11 @@ namespace mtm {
 
 
     };
+
     IntMatrix operator+(const IntMatrix& matrix1 , const IntMatrix& matrix2);
     bool any(const IntMatrix& matrix);
-    bool all(const IntMatrix& matrix); //TODO put the declaration in the header file
-
-//    std::ostream& operator<<(std::ostream &os, IntMatrix &matrix1){
-//        int squared_dims = matrix1.IntMatrix::size();
-//        int* mat_to_array = new int[squared_dims];
-//        for (int i = 0; i <matrix1.height() ; ++i) {
-//            for (int j = 0; j <matrix1.width() ; ++j) {
-//                mat_to_array[i+j] = matrix1(i, j);
-//            }
-//        }
-//        return os << printMatrix(mat_to_array,matrix1.dimensions) << std::endl;
-//    }
-
-
+    bool all(const IntMatrix& matrix);
+    
 }
 
 #endif //INTMATRIX_H
